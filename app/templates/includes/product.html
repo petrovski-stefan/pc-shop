@@ -1,0 +1,27 @@
+<div class="card bg-light me-3" style="width: 13rem;">
+
+    <a href="{% url 'product_detail' product.slug %}">
+        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+    </a>
+    <div class="card-body d-flex flex-column justify-content-between">
+        <div>
+            <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none text-primary">
+                <h6 class="fw-bold card-title">{{ product.name }}</h6>
+            </a>
+        </div>
+        <div class="d-flex flex-column justify-content-end">
+            <p style="font-size: 14px">Rating: {{ product.calculate_average_rating }}</p>
+            <div class="d-flex justify-content-between">
+                <p class="align-self-end" style="font-size: 10px">{{ product.sold }} sold</p>
+                <p class="fw-bold align-self-end">${{ product.price }}</p>
+            </div>
+            {% if request.user.is_authenticated and not request.user.is_superuser %}
+            <form class="align-self-center w-100" action="{% url 'add_to_cart' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value={{ product.id }}>
+                <button type="submit" class="btn btn-primary w-100">Add to cart</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>

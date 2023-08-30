@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %} Categories - PC Shop {% endblock %}
+{% block content %}
+<section>
+  <h3 class="text-primary">Categories</h3>
+  <div class="mt-4 d-flex flex-column">
+    {% for category in categories %}
+        {% include "includes/category.html"%}
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

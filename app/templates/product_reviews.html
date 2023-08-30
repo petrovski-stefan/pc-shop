@@ -1,0 +1,43 @@
+{% extends 'base.html' %} {% block title %} Reviews for {{ product.name }} - PC
+Shop {% endblock %} {% block content %}
+<div class="d-flex">
+  <h3 class="text-primary d-inline mb-4 me-4">
+    Reviews for {{ product.name }}
+  </h3>
+
+  {% if product.seller.id is not request.user.id %}
+  <form
+    action="{% url 'add_review_to_product' %}"
+    method="post"
+  >
+    {% csrf_token %}
+    <input
+      type="hidden"
+      name="product_id"
+      value="{{ product.id }}"
+    />
+    <button
+      class="text-light"
+      style="background: none; border: none; padding: 0"
+      type="submit"
+    >
+      <div
+        class="bg-primary rounded-pill px-3 py-2"
+        style="width: fit-content"
+      >
+        + Add Review
+      </div>
+    </button>
+  </form>
+  {% endif %}
+</div>
+{% if reviews %}
+<div class="d-flex flex-wrap">
+  {% for review in reviews %}
+      {% include 'includes/review.html' %}
+    {% endfor %}
+</div>
+{% else %}
+<h5 class="text-light">There are no reviews for this product yet.</h5>
+{% endif %}
+{% endblock %}

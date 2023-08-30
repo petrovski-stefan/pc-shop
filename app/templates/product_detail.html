@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ product.name }} - PC Shop
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="d-flex">
+            <div class="me-5">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" height="550px" width="300px">
+            </div>
+            <div class="text-light">
+                <div class="mb-5 pb-5">
+                    <h1>{{ product.name }}</h1>
+                    <p>{{ product.description }}</p>
+                    <p>Seller: <a class="text-decoration-none text-primary"
+                                  href="{% url "seller_profile" product.seller %}">{{ product.seller }}</a>
+                    </p>
+                    <p>Rating:
+                        <a class="text-decoration-none text-primary"
+                           href="{% url "reviews" product.slug %}">{{ product.calculate_average_rating }}</a>
+                    </p>
+                </div>
+                <div class="pt-5 mt-5">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="text-primary">${{ product.price }}</h4>
+                        <p class="me-5" style="font-size: 15px">Only {{ product.quantity }} left</p>
+                    </div>
+                    {% if request.user.is_authenticated  and not request.user.is_superuser %}
+                    <form action="{% url 'add_to_cart' %}" method="post" class="d-flex justify-content-between">
+                        {% csrf_token %}
+                        <label>Quantity:
+                            <input style="width: 50px; height:33px; " type="number" name="quantity" value="1" min="1">
+                        </label>
+                        <input type="hidden" name="product_id" value={{ product.id }}>
+                        <button type="submit" class="btn btn-primary">Add to cart</button>
+                    </form>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

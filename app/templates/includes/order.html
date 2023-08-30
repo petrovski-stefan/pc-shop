@@ -1,0 +1,14 @@
+<div class="card bg-light me-3 mb-3">
+    <div class="card-body">
+        <h5 class="mb-3">Order #{{ order.id }}</h5>
+        <p>Order Status: {{ order.status }}</p>
+        <p>Order Date: {{ order.created_at }}</p>
+        <p>Order Total: ${{ order.calculate_total }}</p>
+        <p>Order Items:</p>
+        <ul>
+            {% for item in order.products_in_order.all %}
+                <li>{{ item.product.name }} - ${{ item.product.price }} - x{{ item.quantity }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

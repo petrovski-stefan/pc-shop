@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} Add Product - PC Shop {% endblock %}
+{% block content %}
+<h3 class="text-success">Add Product</h3>
+<form
+  action="{% url 'add_product_to_shop' %}"
+  method="post"
+  enctype="multipart/form-data"
+  class="text-light w-50 d-flex flex-column justify-content-between"
+>
+  {% csrf_token %} {{ form }}
+  <input
+    type="submit"
+    value="Add Product"
+    class="btn btn-success mt-2"
+  />
+</form>
+{% endblock %}

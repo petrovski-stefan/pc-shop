@@ -1,0 +1,22 @@
+<div class="bg-light me-3 d-flex p-3 rounded mb-3">
+  <img
+    src="{{ item.product.image.url }}"
+    alt="{{ item.product.name }}"
+    width="150px"
+    class="me-3"
+  />
+  <div class="d-flex flex-column justify-content-between flex-grow-1">
+    <h2 class="card-title">{{ item.product.name }}</h2>
+    <div class="d-flex align-self-end">
+      <h3 class="">${{ item.product.price }}</h3>
+      <h3>&nbsp; x &nbsp;</h3>
+      <input
+        style="width: 80px"
+        type="number"
+        min="0"
+        class="form-control"
+        value="{{ item.quantity }}"
+      />
+    </div>
+  </div>
+</div>

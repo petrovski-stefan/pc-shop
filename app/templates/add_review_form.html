@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %} Add Review - PC Shop {% endblock %}
+{% block content %}
+<h3 class="text-success">Add Review for {{ product.name }}</h3>
+<form
+  action="{% url 'save_review' %}"
+  method="post"
+  enctype="multipart/form-data"
+  class="text-light w-50 d-flex flex-column justify-content-between"
+>
+  {% csrf_token %}
+  <input
+    type="hidden"
+    name="product_id"
+    value="{{ product.id }}"
+  />
+  <input
+    type="hidden"
+    name="product_slug"
+    value="{{ product.slug }}"
+  />
+  {{ form }}
+  <input
+    type="submit"
+    value="Add Product"
+    class="btn btn-success mt-2"
+  />
+</form>
+{% endblock %}

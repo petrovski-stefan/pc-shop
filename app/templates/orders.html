@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %} My Orders - PC Shop {% endblock %}
+
+{% block content %}
+<div class="text-light">
+  <h3 class="text-primary">
+    {{ request.user }}
+      {% if s_after_apostrophe %}'s
+      {% else%}'
+      {% endif %} Orders
+  </h3>
+  {% for order in orders %}
+      {% include 'includes/order.html' %}
+  {% endfor %}
+</div>
+{% endblock %}

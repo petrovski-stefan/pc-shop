@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Products - PC Shop
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h3 class="text-primary">All products</h3>
+        <form class="d-flex w-50 mt-3" role="search" action="{% url "products" %}" method="get">
+            <input class="form-control me-2" type="search" placeholder="Search" name="search_term">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+        <div class="mt-3 d-flex">
+            {% for product in products %}
+                {% include "includes/product.html" %}
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
