@@ -18,5 +18,8 @@
         value="{{ item.quantity }}"
       />
     </div>
+      <div>
+          <a href="{% url 'remove_from_cart' item.product.id %}" class="btn btn-primary w-100" style= "display: inline-block; width: 230px!important; float: right">Remove</a>
+      </div>
   </div>
 </div>

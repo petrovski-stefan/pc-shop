@@ -15,7 +15,14 @@
                     <h1>{{ product.name }}</h1>
                     <p>{{ product.description }}</p>
                     <p>Seller: <a class="text-decoration-none text-primary"
-                                  href="{% url "seller_profile" product.seller %}">{{ product.seller }}</a>
+                                  href="{% url "seller_profile" product.seller %}">
+
+                        {% if product.seller == request.user %}
+                            You
+                        {% else %}
+                            {{ product.seller }}
+                        {% endif %}
+                    </a>
                     </p>
                     <p>Rating:
                         <a class="text-decoration-none text-primary"
@@ -27,8 +34,11 @@
                         <h4 class="text-primary">${{ product.price }}</h4>
                         <p class="me-5" style="font-size: 15px">Only {{ product.quantity }} left</p>
                     </div>
-                    {% if request.user.is_authenticated  and not request.user.is_superuser %}
-                    <form action="{% url 'add_to_cart' %}" method="post" class="d-flex justify-content-between">
+                    {% if request.user.is_authenticated  and not request.user.is_superuser and request.user != product.seller%}
+                        {% if product.quantity == 0 %}
+                            <h5 class="text-danger">Product currently unavailable</h5>
+                            {% else %}
+                            <form action="{% url 'add_to_cart' %}" method="post" class="d-flex justify-content-between">
                         {% csrf_token %}
                         <label>Quantity:
                             <input style="width: 50px; height:33px; " type="number" name="quantity" value="1" min="1">
@@ -36,6 +46,7 @@
                         <input type="hidden" name="product_id" value={{ product.id }}>
                         <button type="submit" class="btn btn-primary">Add to cart</button>
                     </form>
+                            {% endif %}
                     {% endif %}
                 </div>
 

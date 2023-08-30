@@ -27,7 +27,8 @@
                 {% if  request.user.is_authenticated and  not request.user.is_superuser %}
                     <li class="nav-item me-2">
                         <a class="nav-link text-light" href="/cart">
-                            <div class="bg-light text-primary">{{ request.user.cart.last.total_products_quantity }}</div>
+                            <span class="bg-light text-primary" style="display: inline-block; height: 25px; width: 15px; text-align: center">
+                                {{ request.user.cart.last.total_products_quantity }}</span>
                             <img src="{% static "images/cart_icon.png" %}" width="30px"
                                  alt="Shopping Cart">
                         </a>
@@ -60,16 +61,19 @@
                     </li>
                 {% endif %}
                 {% if request.user.is_superuser %}
-                    <a href="{% url 'admin:index' %}" class="text-decoration-none">
-                        <li class="nav-item d-flex ms-3">
+                    <li class="nav-item d-flex ms-3">
+                    <a href="{% url "seller_profile" request.user %}" class="text-decoration-none">
+
                             <img src="{% static 'images/admin_icon.png' %}" height="40px" width="40px"
                                  alt="{{ request.user }}"
                                  class="rounded-circle ms-2">
-                            <p class="text-light ms-2 pt-2">
-                                {{ request.user }}
-                            </p>
-                        </li>
                     </a>
+                    <a href="{% url 'admin:index' %}" class="text-decoration-none">
+                        <p class="text-light ms-2 pt-2">
+                                {{ request.user }} (admin)
+                            </p>
+                    </a>
+                     </li>
                 {% endif %}
             </ul>
         </div>

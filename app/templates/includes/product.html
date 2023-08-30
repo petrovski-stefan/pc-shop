@@ -15,12 +15,21 @@
                 <p class="align-self-end" style="font-size: 10px">{{ product.sold }} sold</p>
                 <p class="fw-bold align-self-end">${{ product.price }}</p>
             </div>
-            {% if request.user.is_authenticated and not request.user.is_superuser %}
-            <form class="align-self-center w-100" action="{% url 'add_to_cart' %}" method="post">
+            {% if request.user.is_authenticated and not request.user.is_superuser   %}
+
+
+                {% if  request.user == product.seller%}
+                            <button disabled class="btn btn-primary w-100">Your product</button>
+                            {% elif product.quantity == 0  %}
+                     <button disabled class="btn btn-primary w-100" style="cursor: not-allowed">Product currently unavailable</button>
+
+                    {% else %}
+                    <form class="align-self-center w-100" action="{% url 'add_to_cart' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="product_id" value={{ product.id }}>
                 <button type="submit" class="btn btn-primary w-100">Add to cart</button>
             </form>
+                            {% endif %}
             {% endif %}
         </div>
     </div>

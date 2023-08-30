@@ -1,6 +1,6 @@
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from app.forms import ProductForm, ReviewForm
 from app.models import Category, Product, CustomUser, Cart, Order, ProductInOrder, ProductInCart, Review
@@ -10,7 +10,6 @@ from django.contrib.auth import get_user
 from django.contrib.auth.models import User
 
 
-# works
 def index(request):
     items = list(Product.objects.order_by('-sold')[:5])
     return render(request, 'index.html', {
@@ -18,7 +17,6 @@ def index(request):
     })
 
 
-# works
 def products(request):
     search_term = request.GET.get('search_term')
     if search_term:
@@ -36,14 +34,12 @@ def product_detail(request, slug):
     })
 
 
-# works
 def categories(request):
     return render(request, 'categories.html', {
         "categories": Category.objects.all()
     })
 
 
-# works
 def category_list(request, slug):
     category = Category.objects.get(slug=slug)
     items = list(Product.objects.filter(category=category))
@@ -75,7 +71,6 @@ def seller_profile(request, seller_username):
     })
 
 
-@login_required
 def cart(request):
     if request.user.is_authenticated:
         print("User cart: ", request.user)
@@ -107,17 +102,12 @@ def orders(request):
 
     if request.user.is_authenticated:
         user_instance = User.objects.get(username=request.user)
-        print("instance: ", user_instance)
         try:
             user_profile = User.objects.get(username=user_instance)
-            print("User profile: ", user_profile)
             orders = Order.objects.filter(customer=user_profile)
-            print("User orders: ", orders)
         except User.DoesNotExist:
-            print("error in the orders")
             orders = []
     else:
-        print("not authicated")
         orders = []
     return render(request, 'orders.html', {
         "orders": orders,
@@ -143,33 +133,38 @@ def add_product_to_shop(request):
 def checkout(request):
     user_cart = Cart.objects.get(customer=request.user)
     items = user_cart.products_in_cart.all()
+
+    # Don't create the order, if the user has no items in his cart
+    if len(items) == 0:
+        return redirect(request.META['HTTP_REFERER'])
+
     Order(customer=request.user).save()
     for item in items:
-        print("IN THE FOR: ", request.user.orders)
         ProductInOrder(product=item.product, order=request.user.orders.last(), quantity=item.quantity).save()
         item.product.quantity -= item.quantity
-        print("111 ", item.quantity)
         item.product.sold += item.quantity
-        print("222 ", item.quantity)
         item.product.save()
-        print("333 ")
         item.delete()
-    return redirect('/')
+    return redirect(request.META['HTTP_REFERER'])
 
 
-@login_required
 def add_to_cart(request):
-    print("first")
     user_cart, created = Cart.objects.get_or_create(customer=request.user)
-    print("user_cart: ", user_cart)
     product = Product.objects.get(id=request.POST.get('product_id'))
+
+    # Prevent the users from buying their own products
+    if request.user == product.seller:
+        return redirect(request.META['HTTP_REFERER'])
+
     if request.POST.get('quantity'):
         quantity = int(request.POST.get('quantity'))
     else:
         quantity = 1
 
-    # custom_user = User.objects.get(username=request.user)
-    # user_cart = Cart.objects.get(customer=custom_user)
+    # Prevent the users from buying more than the seller offers
+    if quantity > product.quantity:
+        return redirect(request.META['HTTP_REFERER'])
+
     if ProductInCart.objects.filter(product=product, cart=user_cart.id).exists():
         products_in_cart = ProductInCart.objects.get(product=product, cart=user_cart)
         products_in_cart.quantity += quantity
@@ -197,3 +192,16 @@ def save_review(request):
     review.product = product
     review.save()
     return redirect(f"/reviews/{request.POST.get('product_slug')}")
+
+
+def remove_from_cart(request, product_id):
+    user_cart, created = Cart.objects.get_or_create(customer=request.user)
+    product = get_object_or_404(Product, id=product_id)
+
+    try:
+        product_in_cart = ProductInCart.objects.get(product=product, cart=user_cart)
+        product_in_cart.delete()
+    except ProductInCart.DoesNotExist:
+        pass
+
+    return redirect('cart')

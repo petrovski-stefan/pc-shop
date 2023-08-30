@@ -38,4 +38,5 @@ urlpatterns = [
     path('add_to_cart', views.add_to_cart, name='add_to_cart'),
     path('add_review_to_product', views.add_review_to_product, name='add_review_to_product'),
     path('save_review', views.save_review, name='save_review'),
+    path('remove_from_cart/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

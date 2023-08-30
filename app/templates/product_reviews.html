@@ -5,7 +5,7 @@ Shop {% endblock %} {% block content %}
     Reviews for {{ product.name }}
   </h3>
 
-  {% if product.seller.id is not request.user.id %}
+  {% if  request.user.is_authenticated and product.seller.id is not request.user.id %}
   <form
     action="{% url 'add_review_to_product' %}"
     method="post"

@@ -5,10 +5,7 @@
 
 <div class="d-flex">
   <h3 class="text-primary me-4">
-    {{ seller }}
-      {% if s_after_apostrophe %}'s {% else %}'
-    {% endif %}
-      products
+    {{ seller }}'s products
   </h3>
 
   {% if seller.id is request.user.id %}
