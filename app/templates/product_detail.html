@@ -12,7 +12,7 @@
             </div>
             <div class="text-light">
                 <div class="mb-5 pb-5">
-                    <h1>{{ product.name }}</h1>
+                    <h1 class="text-primary">{{ product.name }}</h1>
                     <p>{{ product.description }}</p>
                     <p>Seller: <a class="text-decoration-none text-primary"
                                   href="{% url "seller_profile" product.seller %}">
@@ -24,10 +24,12 @@
                         {% endif %}
                     </a>
                     </p>
-                    <p>Rating:
-                        <a class="text-decoration-none text-primary"
-                           href="{% url "reviews" product.slug %}">{{ product.calculate_average_rating }}</a>
+                    <p>Rating: {{ product.calculate_average_rating }}
                     </p>
+                    <div>
+                        <a class=" text-primary"
+                           href="{% url "reviews" product.slug %}">See all reviews</a>
+                    </div>
                 </div>
                 <div class="pt-5 mt-5">
                     <div class="d-flex justify-content-between">

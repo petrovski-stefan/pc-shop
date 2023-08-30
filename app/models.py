@@ -6,9 +6,6 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 
 
-# Create your models here.
-
-
 class CustomUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='profile')
     address = models.CharField(max_length=255)
@@ -68,8 +65,7 @@ class Order(models.Model):
     status = models.CharField(max_length=100,
                               choices=[('Pending', 'Pending'),
                                        ('Processing', 'Processing'),
-                                       ('Delivered', 'Delivered'),
-                                       ('Cancelled', 'Cancelled')],
+                                       ('Delivered', 'Delivered'), ],
                               default='Pending')
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
     products = models.ManyToManyField(Product, through='ProductInOrder', related_name='orders')
@@ -138,9 +134,8 @@ class ProductInCart(models.Model):
 class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     comment = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to='uploaded/', null=True, blank=True)
 
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
@@ -148,12 +143,9 @@ class Review(models.Model):
     def __str__(self):
         return f"Review #{self.id}: {self.rating} stars"
 
-    class Meta:
-        unique_together = ['customer', 'product']
 
 
 @receiver(post_save, sender=User)
 def create_user_cart(sender, instance, created, **kwargs):
     if created:
-        # print(f"Creating cart for user: {instance.user.username}")
         Cart.objects.create(customer=instance)

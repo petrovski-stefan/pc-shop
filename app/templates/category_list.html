@@ -2,8 +2,9 @@
 {% block title %}
 {{ category.name }} - PC Shop {%endblock %}
 {% block content %}
-<div>
-  <h3 class="text-primary mb-3">{{ category.name }}</h3>
+     <h3 class="text-primary mb-3">{{ category.name }}</h3>
+<div style="display: flex">
+
   {% for product in products %}
       {% include "includes/product.html" %}
     {% endfor %}

@@ -6,12 +6,4 @@
         <p style="font-size: 14px" class="d-inline-block">Rating: {{ review.rating }}</p>
         <p class="card-text d-inline-block">{{ review.comment }}</p>
     </div>
-    <div>
-        {% if review.image %}
-            <img src="{{ review.image.url }}"
-                 class="card-img-bottom"
-                 alt="{{ product.name }}"
-                 width="250px">
-        {% endif %}
-    </div>
 </div>
