@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} Add Product - PC Shop {% endblock %}
 {% block content %}
-<h3 class="text-success">Add Product</h3>
+<h3 class="text-primary">Add Product</h3>
 <form
   action="{% url 'add_product_to_shop' %}"
   method="post"
@@ -12,7 +12,7 @@
   <input
     type="submit"
     value="Add Product"
-    class="btn btn-success mt-2"
+    class="btn btn-primary mt-2"
   />
 </form>
 {% endblock %}

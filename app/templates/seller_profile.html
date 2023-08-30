@@ -4,7 +4,7 @@
 {% endblock %} {% block content %}
 
 <div class="d-flex">
-  <h3 class="text-success me-4">
+  <h3 class="text-primary me-4">
     {{ seller }}
       {% if s_after_apostrophe %}'s {% else %}'
     {% endif %}
@@ -13,7 +13,7 @@
 
   {% if seller.id is request.user.id %}
   <div
-    class="bg-success rounded-pill px-3 py-2"
+    class="bg-primary rounded-pill px-3 py-2"
     style="width: fit-content"
   >
     <a

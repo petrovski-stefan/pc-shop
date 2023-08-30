@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} Add Review - PC Shop {% endblock %}
 {% block content %}
-<h3 class="text-success">Add Review for {{ product.name }}</h3>
+<h3 class="text-primary">Add Review for {{ product.name }}</h3>
 <form
   action="{% url 'save_review' %}"
   method="post"
@@ -23,7 +23,7 @@
   <input
     type="submit"
     value="Add Product"
-    class="btn btn-success mt-2"
+    class="btn btn-primary mt-2"
   />
 </form>
 {% endblock %}
