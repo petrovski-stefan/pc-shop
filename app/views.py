@@ -163,6 +163,12 @@ def add_review_to_product(request):
 
 def save_review(request):
     form = ReviewForm(request.POST)
+
+    # Reviews must be in the range [0,10]
+    if not form.is_valid():
+        print("not valid")
+        return redirect(f"/reviews/{request.POST.get('product_slug')}")
+
     review = form.save(commit=False)
     product = Product.objects.get(id=request.POST.get('product_id'))
     customer = request.user
