@@ -1,0 +1,5 @@
+django==4.2
+mypy
+flake8
+django-stubs
+pillow
