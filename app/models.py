@@ -7,19 +7,20 @@ from django.utils.text import slugify
 
 
 class CustomUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='profile')
-    address = models.CharField(max_length=255)
-    phone = models.CharField(max_length=255)
-    display_name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='uploaded/', default='default.png')
+    user: models.OneToOneField = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,
+                                                      related_name='profile')
+    address: models.CharField = models.CharField(max_length=255)
+    phone: models.CharField = models.CharField(max_length=255)
+    display_name: models.CharField = models.CharField(max_length=255)
+    image: models.ImageField = models.ImageField(upload_to='uploaded/', default='default.png')
 
     def __str__(self):
         return f"{self.display_name} ({self.user})"
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(default="", blank=True, unique=True, db_index=True)
+    name: models.CharField = models.CharField(max_length=255)
+    slug: models.SlugField = models.SlugField(default="", blank=True, unique=True, db_index=True)
 
     class Meta:
         verbose_name_plural = 'Categories'
@@ -29,16 +30,16 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=255)
-    price = models.DecimalField(decimal_places=2, max_digits=10, validators=[MinValueValidator(0)])
-    quantity = models.PositiveIntegerField(validators=[MinValueValidator(0)])
-    description = models.TextField()
-    image = models.ImageField(upload_to='uploaded/')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
-    created_at = models.DateTimeField(auto_now_add=True)
-    sold = models.IntegerField(default=0)
-    slug = models.SlugField(default="", blank=True, db_index=True)
+    name: models.CharField = models.CharField(max_length=255)
+    price: models.DecimalField = models.DecimalField(decimal_places=2, max_digits=10, validators=[MinValueValidator(0)])
+    quantity: models.PositiveIntegerField = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    description: models.TextField = models.TextField()
+    image: models.ImageField = models.ImageField(upload_to='uploaded/')
+    category: models.ForeignKey = models.ForeignKey(Category, on_delete=models.CASCADE)
+    seller: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
+    created_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    sold: models.IntegerField = models.IntegerField(default=0)
+    slug: models.SlugField = models.SlugField(default="", blank=True, db_index=True)
 
     class Meta:
         unique_together = ['seller', 'slug']
@@ -60,15 +61,15 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=100,
-                              choices=[('Pending', 'Pending'),
-                                       ('Processing', 'Processing'),
-                                       ('Delivered', 'Delivered'), ],
-                              default='Pending')
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    products = models.ManyToManyField(Product, through='ProductInOrder', related_name='orders')
+    created_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
+    status: models.CharField = models.CharField(max_length=100,
+                                                choices=[('Pending', 'Pending'),
+                                                         ('Processing', 'Processing'),
+                                                         ('Delivered', 'Delivered'), ],
+                                                default='Pending')
+    customer: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
+    products: models.ManyToManyField = models.ManyToManyField(Product, through='ProductInOrder', related_name='orders')
 
     def calculate_total(self):
         total = 0
@@ -81,9 +82,9 @@ class Order(models.Model):
 
 
 class ProductInOrder(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='products_in_order')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    order: models.ForeignKey = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='products_in_order')
+    product: models.ForeignKey = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity: models.PositiveIntegerField = models.PositiveIntegerField(default=1)
 
     def subtotal(self):
         return self.product.price * self.quantity
@@ -96,11 +97,11 @@ class ProductInOrder(models.Model):
 
 
 class Cart(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
 
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart')
-    products = models.ManyToManyField(Product, through='ProductInCart')
+    customer: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart')
+    products: models.ManyToManyField = models.ManyToManyField(Product, through='ProductInCart')
 
     def calculate_total(self):
         total = 0
@@ -117,9 +118,9 @@ class Cart(models.Model):
 
 
 class ProductInCart(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='products_in_cart')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    cart: models.ForeignKey = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='products_in_cart')
+    product: models.ForeignKey = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity: models.PositiveIntegerField = models.PositiveIntegerField(default=1)
 
     def subtotal(self):
         return self.product.price * self.quantity
@@ -132,17 +133,17 @@ class ProductInCart(models.Model):
 
 
 class Review(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
-    comment = models.TextField(null=True, blank=True)
+    created_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
+    rating: models.PositiveIntegerField = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)])
+    comment: models.TextField = models.TextField(null=True, blank=True)
 
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    customer: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE)
+    product: models.ForeignKey = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
 
     def __str__(self):
         return f"Review #{self.id}: ({self.rating})"
-
 
 
 @receiver(post_save, sender=User)
